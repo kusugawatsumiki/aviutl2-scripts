@@ -10,11 +10,14 @@
 --file@path6:画像パターン6
 --file@path7:画像パターン7
 --file@path8:画像パターン8
---separator:ランダムネス
---track@xrandomness:X座標ランダムネス,0,100,0,0.01
---track@yrandomness:Y座標ランダムネス,0,100,0,0.01
+--separator:位置
+--track@xrandomness:X座標ランダム幅,0,100,0,0.01
+--track@yrandomness:Y座標ランダム幅,0,100,0,0.01
 --separator:依存パラメータ
---track@framerate:フレーム数,1,24,1,1
+--select@mode:モード,フレーム数=0,BPM=1
+--track@fps:フレームレート,1,60,24,1
+--track@framerate:フレーム数,1,60,1,1
+--track@bpm:BPM,60,300,120,1
 
 local function getPattern()
   local result = {}
@@ -31,14 +34,26 @@ local function getPattern()
   return result
 end
 
-local pattern = getPattern()
-local effectiveFrame = math.floor(obj.frame / framerate)
+local function getEffectiveFrame(originalFrame)
+  if mode == 0 then
+    return math.floor(originalFrame / framerate)
+  end
+  if mode == 1 then
+    return math.floor(originalFrame / (fps * 60 / bpm))
+  end
+end
 
+-- get config
+local pattern = getPattern()
+local effectiveFrame = getEffectiveFrame(obj.frame)
+
+-- load image
 local target = obj.rand(1, #pattern, 1, effectiveFrame)
 if pattern[target] ~= nil then
   obj.load("image", pattern[target])
 end
 
+-- add randomness
 if xrandomness ~= 0 then
   local x = obj.rand(-xrandomness, xrandomness, 1, effectiveFrame)
   obj.ox = x
