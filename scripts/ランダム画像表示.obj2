@@ -1,0 +1,49 @@
+
+--information:ランダム画像表示 v0.1 by kusugawatsumiki
+--label:画面効果
+--separator:画像パターン
+--file@path1:画像パターン1
+--file@path2:画像パターン2
+--file@path3:画像パターン3
+--file@path4:画像パターン4
+--file@path5:画像パターン5
+--file@path6:画像パターン6
+--file@path7:画像パターン7
+--file@path8:画像パターン8
+--separator:ランダムネス
+--track@xrandomness:X座標ランダムネス,0,100,0,0.01
+--track@yrandomness:Y座標ランダムネス,0,100,0,0.01
+--separator:依存パラメータ
+--track@framerate:フレーム数,1,24,1,1
+
+local function getPattern()
+  local result = {}
+  local count = 0
+  if path1 ~= "" then count = count + 1 result[count] = path1 end
+  if path2 ~= "" then count = count + 1 result[count] = path2 end
+  if path3 ~= "" then count = count + 1 result[count] = path3 end
+  if path4 ~= "" then count = count + 1 result[count] = path4 end
+  if path5 ~= "" then count = count + 1 result[count] = path5 end
+  if path6 ~= "" then count = count + 1 result[count] = path6 end
+  if path7 ~= "" then count = count + 1 result[count] = path7 end
+  if path8 ~= "" then count = count + 1 result[count] = path8 end
+  
+  return result
+end
+
+local pattern = getPattern()
+local effectiveFrame = math.floor(obj.frame / framerate)
+
+local target = obj.rand(1, #pattern, 1, effectiveFrame)
+if pattern[target] ~= nil then
+  obj.load("image", pattern[target])
+end
+
+if xrandomness ~= 0 then
+  local x = obj.rand(-xrandomness, xrandomness, 1, effectiveFrame)
+  obj.ox = x
+end
+if yrandomness ~= 0 then
+  local y = obj.rand(-yrandomness, yrandomness, 1, effectiveFrame)
+  obj.oy = y
+end
