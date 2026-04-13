@@ -1,0 +1,10 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# restrict CRLF, working-tree-encoding=UTF-8, and linguist-language=Lua to specific files
+*.lua text eol=lf linguist-language=Lua working-tree-encoding=UTF-8
+*.anm2 text eol=lf linguist-language=Lua working-tree-encoding=UTF-8
+*.obj2 text eol=lf linguist-language=Lua working-tree-encoding=UTF-8
+*.cam2 text eol=lf linguist-language=Lua working-tree-encoding=UTF-8
+*.tra2 text eol=lf linguist-language=Lua working-tree-encoding=UTF-8
+*.scn2 text eol=lf linguist-language=Lua working-tree-encoding=UTF-8
