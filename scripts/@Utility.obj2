@@ -1,0 +1,12 @@
+
+@Line
+--information:Line v0.1 by kusugawatsumiki
+--label:Utility
+--track@length:長さ,0,1920,100,1
+--track@weight:線の太さ,1,20,5,1
+--color@color:色,0xffffff
+
+obj.load("figure", "四角形", color, length, length, false)
+obj.copybuffer("tempbuffer", "object")
+
+obj.load("tempbuffer", 0, 0, weight, length)
