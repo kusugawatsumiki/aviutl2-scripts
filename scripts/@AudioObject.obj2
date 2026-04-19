@@ -1,0 +1,19 @@
+
+@Beat
+--information:Beat v0.1 by kusugawatsumiki
+--label:AudioObject
+--track@bpm:BPM,60,300,120,1
+--track@time:拍子,1,16,4,1
+--figure@figure:図形,円
+--color@color:色,0xffffff
+--track@size:サイズ,10,200,100,1
+--track@interval:間隔,0,5,1,0.01
+
+local beatcount = math.floor(obj.frame / (obj.framerate * 60 / bpm))
+local beat = beatcount % time
+
+obj.load("figure", figure, color, size, size / 2, false)
+for i = 0, beat do
+  -- x, y, z, zoom, alpha
+  obj.draw(i * size * (1 + interval), 0, 0, 1, 1) 
+end

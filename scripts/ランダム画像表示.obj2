@@ -15,8 +15,7 @@
 --track@yrandomness:Y座標ランダム幅,0,100,0,0.01
 --separator:依存パラメータ
 --select@mode:モード,フレーム数=0,BPM=1
---track@fps:フレームレート,1,60,24,1
---track@framerate:フレーム数,1,60,1,1
+--track@framecount:フレーム数,1,60,1,1
 --track@bpm:BPM,60,300,120,1
 
 local function getPattern()
@@ -34,18 +33,18 @@ local function getPattern()
   return result
 end
 
-local function getEffectiveFrame(originalFrame)
+local function getEffectiveFrame()
   if mode == 0 then
-    return math.floor(originalFrame / framerate)
+    return math.floor(obj.frame / framecount)
   end
   if mode == 1 then
-    return math.floor(originalFrame / (fps * 60 / bpm))
+    return math.floor(obj.frame / (obj.framerate * 60 / bpm))
   end
 end
 
 -- get config
 local pattern = getPattern()
-local effectiveFrame = getEffectiveFrame(obj.frame)
+local effectiveFrame = getEffectiveFrame()
 
 -- load image
 local target = obj.rand(1, #pattern, 1, effectiveFrame)
