@@ -36,7 +36,6 @@ const createArchiveStructure = (version: string): string => {
     }
   } catch (error) {
     console.error("Error occurred while creating archive structure:", error);
-    throw error;
   }
 
   return root;
@@ -47,24 +46,26 @@ const cleanArchiveStructure = (path: string) => {
     fs.rmSync(path, { recursive: true, force: true });
   } catch (error) {
     console.error("Error occurred while cleaning archive structure:", error);
-    throw error;
   }
 };
 
-const compressPackage = (path: string, destination: string): string => {
+const compressPackage = (path: string, destination: string) => {
   const command = `Compress-Archive -Path "${path}\\*" -DestinationPath "${destination}" -Force`;
   try {
     execSync(command, { shell: "powershell", stdio: "inherit" });
     return destination;
   } catch (error) {
     console.error("Error occurred while compressing package:", error);
-    throw error;
   }
 };
 
-const version = fromArgv("--version");
-const archivePath = createArchiveStructure(version);
-const packagePath = compressPackage(archivePath, `${archivePath}.${packageExtension}`);
-cleanArchiveStructure(archivePath);
-
-console.log(`✓ Package created successfully: ${packagePath}`);
+try {
+  const version = fromArgv("--version");
+  const archivePath = createArchiveStructure(version);
+  const packagePath = compressPackage(archivePath, `${archivePath}.${packageExtension}`);
+  cleanArchiveStructure(archivePath);
+  console.log(`✓ Package created successfully: ${packagePath}`);
+} catch (error) {
+  console.error("Error occurred while creating package:", error);
+  process.exit(1);
+}
