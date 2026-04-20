@@ -1,52 +1,47 @@
-import fs from 'node:fs/promises';
+import fs from 'node:fs';
 import { spawn } from 'node:child_process';
 import 'dotenv/config';
 
-const updateScriptAll = async () => {
-  const scripts = await fs.readdir("scripts");
-  const copy = (script: string) => new Promise<string>(async (resolve, reject) => {
+const updateScriptAll = (): void => {
+  const scripts = fs.readdirSync("scripts");
+  const copy = (script: string) => {
     try {
-        await fs.copyFile(`scripts/${script}`, `${process.env.AVIUTL2_SCRIPTS_DIR}/${script}`);
-        resolve(script);
+        fs.copyFileSync(`scripts/${script}`, `${process.env.AVIUTL2_SCRIPTS_DIR}/${script}`);
+        return script;
     } catch(error) {
-      console.error(error);
-      reject(error);
+      throw error;
     }
-  });
+  };
 
   try {
-    const result = await Promise.all(scripts.map(script => copy(script)));
+    const result = scripts.map(script => copy(script));
     for (const script of result) {
       console.log(`✓ Updated: ${script}`);
     }
   } catch(error) {
-    console.error(error);
+    throw error;
   }
 };
 
 const startAviUtl2 = async () => {
-  return new Promise<void>((resolve, reject) => {
-    if (!process.env.AVIUTL2_EXE_PATH) {
-      reject("AVIUTL2_EXE_PATH is not defined in .env file");
-      return;
-    }
+  if (!process.env.AVIUTL2_EXE_PATH) {
+    throw new Error("AVIUTL2_EXE_PATH is not defined in .env file");
+  }
 
-    const child = spawn(process.env.AVIUTL2_EXE_PATH, [], { detached: true, stdio: 'ignore' });
-    child.on('error', (error) => reject(error));
-    child.on('spawn', () => {
-      console.log('✓ AviUtl2 started successfully.');
-      resolve();
-    });
+  const child = spawn(process.env.AVIUTL2_EXE_PATH, [], { detached: true, stdio: 'ignore' });
+  child.on('error', (error) => {
+    throw error;
+  });
+  child.on('spawn', () => {
+    console.log('✓ AviUtl2 started successfully.');
   });
 };
 
-const main = async () => {
-  try {
-    await updateScriptAll();
-    await startAviUtl2();
-  } catch(error) {
-    console.error(error);
-  }
-};
+try {
+  updateScriptAll();
+  startAviUtl2();
+} catch(error) {
+  console.error(error);
+}
 
-main().then(() => process.exit());
+process.exit();
