@@ -4,7 +4,7 @@
   "description": "Lua Scripts for AviUtl2",
   "type": "module",
   "scripts": {
-    "dev": "npx tsx devtools/debug.ts"
+    "dev": "npx tsx devtools/develop.ts"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",
