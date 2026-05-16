@@ -17,3 +17,56 @@ for i = 0, beat do
   -- x, y, z, zoom, alpha
   obj.draw(i * size * (1 + interval), 0, 0, 1, 1) 
 end
+
+
+
+@Bit Spectrum Matrix
+--information:Bit Spectrum Matrix v0.1 by kusugawatsumiki
+--label:AudioObject
+--separator:マトリクス
+--track@row:行数,1,32,8,1
+--track@column:列数,1,32,8,1
+--separator:セル
+--track@cellsize:セルサイズ,1,100,20,1
+--track@cellwidth:線幅,1,100,1,1
+--color@color:色,0xffffff
+--separator:スペクトラム
+--track@threshold:閾値,0,100,1,0.01
+--check@shuffle:ランダム配置,false
+--value@seed:シード,1024
+
+local function xorshift(x)
+  local x = XOR(x, SHIFT(x, 13))
+  x = XOR(x, SHIFT(x, -17))
+  x = XOR(x, SHIFT(x, 5))
+  return x
+end
+
+local function index(max_index)
+  if shuffle then
+    local s = xorshift(seed)
+    return (s % max_index + 1)
+  else
+    return max_index
+  end
+end
+
+local n, rate, buffer = obj.getaudio(nil, "audiobuffer", "spectrum", row * column)
+obj.load("figure", "四角形", color, cellsize, cellwidth, false)
+
+-- swap
+for i = row * column, 1, -1 do
+  local j = index(i)
+  buffer[i], buffer[j] = buffer[j], buffer[i]
+end
+
+for i = 1, row do
+  for j = 1, column do
+    local value = math.log(buffer[(i - 1) * column + j]) 
+    if value >= threshold then
+      local x = (j - 1) * (cellsize - 1)
+      local y = (i - 1) * (cellsize - 1)
+      obj.draw(x, y, 0, 1, 1)
+    end
+  end
+end

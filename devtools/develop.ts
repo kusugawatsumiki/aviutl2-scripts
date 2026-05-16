@@ -19,7 +19,7 @@ const updateScriptAll = (): void => {
   }
 };
 
-const startAviUtl2 = async () => {
+const startAviUtl2 = (): void => {
   if (!process.env.AVIUTL2_EXE_PATH) {
     throw new Error("AVIUTL2_EXE_PATH is not defined in .env file");
   }
