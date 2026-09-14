@@ -13,6 +13,29 @@ obj.load("tempbuffer", 0, 0, weight, length)
 
 
 
+@Elapsed Timer
+--information: Elapsed Timer v0.1 by kusugawatsumiki
+--label:Utility
+--string@format:フォーマット,[ %02d:%02d.%02d ]
+--string@origin:基準フレーム,
+--separator:テキスト
+--track@fontsize:フォントサイズ,1,200,20,1
+--track@charspacing:字間,-500,500,0,0.01
+--font@font:フォント,Yu Gothic UI
+--color@textcolor:文字色,0xffffff
+
+local function startframe(origin)
+  local result = tonumber(origin)
+  if result then return result else return 0 end
+end
+
+local elapsedsecond = (startframe(origin) + obj.frame) / obj.framerate
+local text = string.format(format, elapsedsecond / 60, elapsedsecond % 60, (elapsedsecond * 100) % 100)
+obj.setfont(font, fontsize, 0, textcolor, textcolor, false, false, charspacing, 0)
+obj.load("text", text, 0, 0, 3) 
+
+
+
 @Annotation
 --information:Annotation v0.1 by kusugawatsumiki
 --label:Utility
